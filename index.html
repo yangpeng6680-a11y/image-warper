@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <title>🌸 批量图片拉伸编辑器 (带背景合成)</title>
+<!-- Google Identity Services -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ffd6e7, #ffb6c1); padding: 20px; min-height: 100vh; }
@@ -92,6 +94,23 @@ input:checked + .slider:before { transform: translateX(24px); }
 </head>
 <body>
 <div class="container">
+  <!-- Google 登录头部 -->
+  <div id="googleLoginHeader" style="display:flex; justify-content:flex-end; margin-bottom:10px;">
+    <div id="g_id_onbutton"
+         data-type="standard"
+         data-shape="rectangular"
+         data-theme="outline"
+         data-text="signin_with"
+         data-size="large"
+         data-logo_alignment="left">
+    </div>
+    <!-- 登录后显示用户名 -->
+    <div id="userInfo" style="display:none; align-items:center; gap:10px;">
+      <span id="userName" style="color:#ff6b9d; font-weight:700; font-size:14px;"></span>
+      <button onclick="signOut()" style="padding:6px 16px; background:#ff6b9d; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px;">登出</button>
+    </div>
+  </div>
+
   <h1>🌸 批量图片拉伸编辑器 🌸</h1>
 
   <div class="card">
@@ -781,6 +800,79 @@ function initButtons() {
     e.preventDefault();
     updateCanvasSizeAndReset();
   });
+}
+
+// ============================================
+// Google 登录
+// ============================================
+const clientId = '1025674431845-t0bsq6ov8tp90vgcnjj0k7u3dqvp4qpe.apps.googleusercontent.com';
+
+function renderGoogleButton() {
+  google.accounts.id.renderButton(
+    document.getElementById('g_id_onbutton'),
+    {
+      type: 'standard',
+      shape: 'rectangular',
+      theme: 'outline',
+      size: 'large',
+      text: 'signin_with',
+      logo_alignment: 'left'
+    }
+  );
+}
+
+function handleCredentialResponse(response) {
+  // 解码 JWT token 获取用户信息
+  const payload = JSON.parse(atob(response.credential.split('.')[1]));
+  const name = payload.name;
+  const email = payload.email;
+  const picture = payload.picture;
+
+  // 隐藏登录按钮，显示用户信息
+  document.getElementById('g_id_onbutton').style.display = 'none';
+  document.getElementById('userInfo').style.display = 'flex';
+  document.getElementById('userName').textContent = '👋 ' + name;
+
+  console.log('Google 登录成功:', name, email);
+  localStorage.setItem('googleUser', JSON.stringify({ name, email, picture }));
+}
+
+function signOut() {
+  google.accounts.id.disableAutoSelect();
+  document.getElementById('g_id_onbutton').style.display = 'block';
+  document.getElementById('userInfo').style.display = 'none';
+  document.getElementById('userName').textContent = '';
+  localStorage.removeItem('googleUser');
+}
+
+// 等 GIS 库加载完成后再初始化
+function initGIS() {
+  if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
+    setTimeout(initGIS, 100);
+    return;
+  }
+  google.accounts.id.initialize({
+    client_id: clientId,
+    callback: handleCredentialResponse,
+    auto_select: false
+  });
+  renderGoogleButton();
+
+  // 检查是否已登录（刷新后保持状态）
+  const savedUser = localStorage.getItem('googleUser');
+  if (savedUser) {
+    const user = JSON.parse(savedUser);
+    document.getElementById('g_id_onbutton').style.display = 'none';
+    document.getElementById('userInfo').style.display = 'flex';
+    document.getElementById('userName').textContent = '👋 ' + user.name;
+  }
+}
+
+// 页面加载完成后初始化
+if (document.readyState === 'complete') {
+  initGIS();
+} else {
+  window.addEventListener('load', initGIS);
 }
 </script>
 </body>
