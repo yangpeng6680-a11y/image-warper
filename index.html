@@ -854,7 +854,8 @@ function initGIS() {
   google.accounts.id.initialize({
     client_id: clientId,
     callback: handleCredentialResponse,
-    auto_select: false
+    auto_select: false,
+    use_fedcm_for_prompt: true  // 启用 FedCM，兼容阻止第三方 Cookie 的浏览器
   });
   renderGoogleButton();
 
