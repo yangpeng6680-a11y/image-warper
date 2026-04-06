@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>🌸 批量图片拉伸编辑器 (带背景合成)</title>
+<title>🌸 Batch Image Warp Editor (with Background Compositing)</title>
 <!-- Google Identity Services -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
@@ -10,12 +10,12 @@
 body { font-family: 'Nunito', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: linear-gradient(135deg, #ffd6e7, #ffb6c1); padding: 20px; min-height: 100vh; }
 .container { max-width: 1200px; margin: 0 auto; }
 h1 { color: #ff6b9d; text-align: center; margin-bottom: 25px; font-weight: 700; font-size: 32px; text-shadow: 2px 2px 4px rgba(0,0,0,0.1); }
-/* 卡片样式 */
+/* Card styles */
 .card { background: rgba(255, 255, 255, 0.9); border-radius: 20px; box-shadow: 0 8px 32px rgba(252, 108, 133, 0.3); padding: 25px; margin-bottom: 25px; backdrop-filter: blur(10px); border: 2px solid rgba(255, 182, 193, 0.3); }
 .card h3 { color: #ff6b9d; margin-bottom: 20px; font-weight: 600; font-size: 22px; display: flex; align-items: center; }
 .card h3::before { content: "🌸"; margin-right: 10px; font-size: 20px; }
 
-/* 背景与上传区域样式 */
+/* Background & upload area styles */
 .upload-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; }
 .upload-status { color: #ff6b9d; font-size: 14px; padding: 8px 16px; background-color: #ffeef2; border-radius: 16px; font-weight: 600; box-shadow: 0 2px 8px rgba(255,107,157,0.2); }
 .upload-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
@@ -28,16 +28,16 @@ h1 { color: #ff6b9d; text-align: center; margin-bottom: 25px; font-weight: 700; 
 .upload-text h4 { color: #ff6b9d; font-weight: 600; font-size: 16px; margin-bottom: 6px; }
 .upload-text p { color: #ff9eb5; font-size: 13px; }
 
-/* 缩略图容器 */
+/* Thumbnail container */
 .thumbnail-container { background: #fff5f8; border-radius: 12px; padding: 15px; margin-top: 20px; border: 1px solid #ffeef2; }
 .thumbnail-title { font-size: 14px; color: #ff8aa7; margin-bottom: 10px; font-weight: 600; }
 .thumbnails { display: flex; flex-wrap: wrap; gap: 10px; max-height: 160px; overflow-y: auto; }
 .thumbnail-item { width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #ffb6c1; box-shadow: 0 2px 6px rgba(0,0,0,0.1); }
 
-/* 背景控制区 */
+/* Background control area */
 .bg-control-box { background: linear-gradient(135deg, #fff, #fff5f8); border: 2px solid #ffb6c1; border-radius: 16px; padding: 20px; height: 100%; }
 .toggle-container { display: flex; align-items: center; margin-bottom: 15px; }
-/* 开关样式 */
+/* Toggle switch styles */
 .switch { position: relative; display: inline-block; width: 50px; height: 26px; margin-right: 12px; }
 .switch input { opacity: 0; width: 0; height: 0; }
 .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ffcce0; transition: .4s; border-radius: 26px; }
@@ -46,12 +46,12 @@ input:checked + .slider { background-color: #ff6b9d; }
 input:checked + .slider:before { transform: translateX(24px); }
 .toggle-label { color: #ff6b9d; font-weight: 700; font-size: 16px; cursor: pointer; }
 
-/* 调节区域样式 */
+/* Adjustment area styles */
 .adjustment-container { display: flex; flex-direction: column; align-items: center; }
 .image-canvas-wrapper { position: relative; margin: 0 auto; max-width: 100%; box-shadow: 0 10px 30px rgba(255, 107, 157, 0.2); border-radius: 12px; }
 .canvas-container { position: relative; display: inline-block; }
 .image-canvas { display: block; background-color: #fff5f8; border-radius: 12px; }
-/* 棋盘格背景(用来显示透明度) */
+/* Checkerboard background (for transparency) */
 .transparent-bg { background-image: linear-gradient(45deg, #eee 25%, transparent 25%, transparent 75%, #eee 75%, #eee 100%), linear-gradient(45deg, #eee 25%, white 25%, white 75%, #eee 75%, #eee 100%); background-size: 20px 20px; background-position: 0 0, 10px 10px; }
 
 .control-point { position: absolute; width: 20px; height: 20px; border-radius: 50%; background-color: #ff6b9d; border: 3px solid white; cursor: move; box-shadow: 0 3px 8px rgba(255, 107, 157, 0.6); z-index: 10; transition: transform 0.2s, background-color 0.2s; }
@@ -62,7 +62,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 .control-point.bottom-left { transform: translate(-50%, 50%); }
 .control-point.bottom-right { transform: translate(50%, 50%); }
 
-/* 数值调节面板 */
+/* Numeric control panel */
 .numeric-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 25px; width: 100%; }
 .corner-control-group { background: #fff5f8; padding: 18px; border-radius: 16px; border: 2px solid #ffeef2; transition: all 0.3s; }
 .corner-control-group:hover { border-color: #ffb6c1; }
@@ -73,7 +73,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 .input-group input { padding: 10px 14px; border: 2px solid #ffb6c1; border-radius: 10px; font-size: 14px; background: white; color: #ff6b9d; font-weight: 500; }
 .input-group input:focus { outline: none; border-color: #ff6b9d; box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.2); }
 
-/* 预览和操作按钮 */
+/* Preview and action buttons */
 .preview-actions { display: flex; justify-content: center; gap: 18px; margin-top: 25px; flex-wrap: wrap; }
 .action-btn { display: inline-flex; align-items: center; justify-content: center; padding: 14px 28px; border-radius: 14px; text-decoration: none; font-size: 16px; font-weight: 700; transition: all 0.3s; min-width: 160px; border: none; cursor: pointer; }
 .download-all-btn { background: linear-gradient(135deg, #ff6b9d, #ff8aa7); color: white; box-shadow: 0 6px 16px rgba(255, 107, 157, 0.4); }
@@ -94,7 +94,7 @@ input:checked + .slider:before { transform: translateX(24px); }
 </head>
 <body>
 <div class="container">
-  <!-- Google 登录头部 -->
+  <!-- Google Login Header -->
   <div id="googleLoginHeader" style="display:flex; justify-content:flex-end; margin-bottom:10px;">
     <div id="g_id_onbutton"
          data-type="standard"
@@ -104,19 +104,19 @@ input:checked + .slider:before { transform: translateX(24px); }
          data-size="large"
          data-logo_alignment="left">
     </div>
-    <!-- 登录后显示用户名 -->
+    <!-- User info after login -->
     <div id="userInfo" style="display:none; align-items:center; gap:10px;">
       <span id="userName" style="color:#ff6b9d; font-weight:700; font-size:14px;"></span>
-      <button onclick="signOut()" style="padding:6px 16px; background:#ff6b9d; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px;">登出</button>
+      <button onclick="signOut()" style="padding:6px 16px; background:#ff6b9d; color:white; border:none; border-radius:8px; cursor:pointer; font-weight:700; font-size:13px;">Logout</button>
     </div>
   </div>
 
-  <h1>🌸 批量图片拉伸编辑器 🌸</h1>
+  <h1>🌸 Batch Image Warp Editor 🌸</h1>
 
   <div class="card">
     <div class="upload-header">
-      <h3>📁 准备素材</h3>
-      <div class="upload-status" id="uploadStatus">当前未选择图片</div>
+      <h3>📁 Prepare Materials</h3>
+      <div class="upload-status" id="uploadStatus">No images selected</div>
     </div>
     
     <div class="upload-grid">
@@ -126,7 +126,7 @@ input:checked + .slider:before { transform: translateX(24px); }
             <input type="checkbox" id="enableBgToggle">
             <span class="slider"></span>
           </label>
-          <label class="toggle-label" for="enableBgToggle">启用背景图底板</label>
+          <label class="toggle-label" for="enableBgToggle">Enable background image</label>
         </div>
         
         <div id="bgUploadSection" style="display: none; height: calc(100% - 40px);">
@@ -134,13 +134,13 @@ input:checked + .slider:before { transform: translateX(24px); }
             <input type="file" id="bgUpload" accept="image/jpeg,image/png">
             <div class="upload-icon">🖼️</div>
             <div class="upload-text">
-              <h4 id="bgUploadTitle">上传背景底图</h4>
-              <p>合成时将以背景尺寸为最终画布</p>
+              <h4 id="bgUploadTitle">Upload background image</h4>
+              <p>The background size will be used as the final canvas</p>
             </div>
           </label>
         </div>
         <div id="bgDisabledHint" style="color:#ffb6c1; font-size: 14px; margin-top: 10px;">
-          开启后可上传底图，前景图将合成在底图上。
+          Enable to upload a background. Foreground images will be composited on top.
         </div>
       </div>
 
@@ -149,21 +149,21 @@ input:checked + .slider:before { transform: translateX(24px); }
           <input type="file" id="imageUpload" accept="image/jpeg,image/png" multiple>
           <div class="upload-icon">🎀</div>
           <div class="upload-text">
-            <h4>上传需要拉伸的图片</h4>
-            <p>支持多选，批量应用相同形变</p>
+            <h4>Upload images to warp</h4>
+            <p>Multi-select supported, batch apply same distortion</p>
           </div>
         </label>
       </div>
     </div>
 
     <div class="thumbnail-container" id="thumbnailContainer" style="display: none;">
-      <div class="thumbnail-title">已上传图片队列：</div>
+      <div class="thumbnail-title">Uploaded image queue:</div>
       <div class="thumbnails" id="thumbnailsBox"></div>
     </div>
   </div>
 
   <div class="card">
-    <h3>✨ 四角拉伸调节 ✨</h3>
+    <h3>✨ Corner Adjustment ✨</h3>
     <div class="adjustment-container">
       <div class="image-canvas-wrapper transparent-bg">
         <div class="canvas-container" id="canvasContainer">
@@ -177,95 +177,95 @@ input:checked + .slider:before { transform: translateX(24px); }
       
       <div class="numeric-controls">
         <div class="corner-control-group">
-          <div class="corner-title">↖️ 左上角</div>
+          <div class="corner-title">↖️ Top Left</div>
           <div class="coordinate-inputs">
             <div class="input-group">
-              <label for="tlX">X坐标:</label>
+              <label for="tlX">X:</label>
               <input type="number" id="tlX" min="0" step="1">
             </div>
             <div class="input-group">
-              <label for="tlY">Y坐标:</label>
+              <label for="tlY">Y:</label>
               <input type="number" id="tlY" min="0" step="1">
             </div>
           </div>
         </div>
         
         <div class="corner-control-group">
-          <div class="corner-title">↗️ 右上角</div>
+          <div class="corner-title">↗️ Top Right</div>
           <div class="coordinate-inputs">
             <div class="input-group">
-              <label for="trX">X坐标:</label>
+              <label for="trX">X:</label>
               <input type="number" id="trX" min="0" step="1">
             </div>
             <div class="input-group">
-              <label for="trY">Y坐标:</label>
+              <label for="trY">Y:</label>
               <input type="number" id="trY" min="0" step="1">
             </div>
           </div>
         </div>
         
         <div class="corner-control-group">
-          <div class="corner-title">↙️ 左下角</div>
+          <div class="corner-title">↙️ Bottom Left</div>
           <div class="coordinate-inputs">
             <div class="input-group">
-              <label for="blX">X坐标:</label>
+              <label for="blX">X:</label>
               <input type="number" id="blX" min="0" step="1">
             </div>
             <div class="input-group">
-              <label for="blY">Y坐标:</label>
+              <label for="blY">Y:</label>
               <input type="number" id="blY" min="0" step="1">
             </div>
           </div>
         </div>
         
         <div class="corner-control-group">
-          <div class="corner-title">↘️ 右下角</div>
+          <div class="corner-title">↘️ Bottom Right</div>
           <div class="coordinate-inputs">
             <div class="input-group">
-              <label for="brX">X坐标:</label>
+              <label for="brX">X:</label>
               <input type="number" id="brX" min="0" step="1">
             </div>
             <div class="input-group">
-              <label for="brY">Y坐标:</label>
+              <label for="brY">Y:</label>
               <input type="number" id="brY" min="0" step="1">
             </div>
           </div>
         </div>
       </div>
       
-      <p class="tip-text" id="dragTipText">拖动四个角点或输入数值来精确拉伸图片形状（不可超出当前画布）</p>
+      <p class="tip-text" id="dragTipText">Drag the four corner points or enter values to precisely warp the image (cannot exceed canvas bounds)</p>
     </div>
   </div>
 
   <div class="card">
-    <h3>💖 批量导出 💖</h3>
-    <div class="tip-text">调节完成后，一键高清生成并下载所有合成图片</div>
+    <h3>💖 Batch Export 💖</h3>
+    <div class="tip-text">Once adjusted, generate and download all composited images in one click</div>
     <div class="preview-actions">
-      <a href="#" id="downloadAllBtn" class="action-btn download-all-btn">📥 批量下载处理结果</a>
-      <a href="#" id="resetBtn" class="action-btn reset-btn">🔄 重置形变</a>
+      <a href="#" id="downloadAllBtn" class="action-btn download-all-btn">📥 Download All Results</a>
+      <a href="#" id="resetBtn" class="action-btn reset-btn">🔄 Reset Distortion</a>
     </div>
   </div>
 </div>
 
 <script>
-// ================= 全局状态 =================
-let uploadedImages = []; // 待拉伸的前景图片队列
-let currentImageObj = null; // 当前预览的前景图片对象
-let backgroundImageObj = null; // 背景图片对象
-let useBackground = false; // 是否开启了背景图
+// ================= Global state =================
+let uploadedImages = []; // Queue of foreground images to warp
+let currentImageObj = null; // Current preview foreground image object
+let backgroundImageObj = null; // Background image object
+let useBackground = false; // Whether background mode is enabled
 
-// 画布尺寸相关
+// Canvas size related
 let originalCanvasWidth = 400; 
 let originalCanvasHeight = 300;
 
-// 交互相关
+// Interaction related
 let isDragging = false; 
 let dragPoint = null; 
 let offsetX = 0, offsetY = 0; 
 
-// ================= 初始化 =================
+// ================= Initialize =================
 document.addEventListener('DOMContentLoaded', function() {
-  // 背景开关监听
+  // Background toggle listener
   const enableBgToggle = document.getElementById('enableBgToggle');
   enableBgToggle.addEventListener('change', function(e) {
     useBackground = e.target.checked;
@@ -274,13 +274,13 @@ document.addEventListener('DOMContentLoaded', function() {
     updateCanvasSizeAndReset();
   });
 
-  // 背景图上传监听
+  // Background upload listener
   document.getElementById('bgUpload').addEventListener('change', handleBgUpload);
   
-  // 批量图片上传监听
+  // Batch image upload listener
   document.getElementById('imageUpload').addEventListener('change', handleImageUpload);
   
-  // 拖拽上传支持
+  // Drag & drop upload support
   setupDragAndDrop('fgUploadArea', document.getElementById('imageUpload'));
   setupDragAndDrop('bgUploadArea', document.getElementById('bgUpload'));
   
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', function() {
   initButtons();
 });
 
-// 拖拽功能封装
+// Drag & drop helper
 function setupDragAndDrop(areaId, inputElement) {
   const area = document.getElementById(areaId);
   area.addEventListener('dragover', e => {
@@ -312,9 +312,9 @@ function setupDragAndDrop(areaId, inputElement) {
   });
 }
 
-// ================= 图片上传与处理 =================
+// ================= Image upload & processing =================
 
-// 处理背景图上传
+// Handle background image upload
 function handleBgUpload(e) {
   const file = e.target.files[0];
   if (!file || !file.type.startsWith('image/')) return;
@@ -323,7 +323,7 @@ function handleBgUpload(e) {
   reader.onload = function(evt) {
     backgroundImageObj = new Image();
     backgroundImageObj.onload = function() {
-      document.getElementById('bgUploadTitle').innerText = '✅ 已加载背景图';
+      document.getElementById('bgUploadTitle').innerText = '✅ Background loaded';
       updateCanvasSizeAndReset();
     };
     backgroundImageObj.src = evt.target.result;
@@ -331,7 +331,7 @@ function handleBgUpload(e) {
   reader.readAsDataURL(file);
 }
 
-// 处理前景图批量上传
+// Handle foreground batch upload
 function handleImageUpload(e) {
   const files = e.target.files;
   const validFiles = Array.from(files).filter(f => f.type.startsWith('image/'));
@@ -349,7 +349,7 @@ function handleImageUpload(e) {
       
       uploadedImages.push(imageData);
       
-      // 第一张图用来做预览
+      // First image for preview
       if (uploadedImages.length === 1 && !currentImageObj) {
         currentImageObj = new Image();
         currentImageObj.onload = updateCanvasSizeAndReset;
@@ -365,10 +365,10 @@ function handleImageUpload(e) {
   });
 }
 
-// 更新UI（计数与缩略图）
+// Update UI (count & thumbnails)
 function updateUploadUI() {
   const uploadStatus = document.getElementById('uploadStatus');
-  uploadStatus.innerHTML = `已准备：<strong>${uploadedImages.length}</strong> 张需拉伸图片`;
+  uploadStatus.innerHTML = `Ready: <strong>${uploadedImages.length}</strong>  image(s) to warp`;
   
   const container = document.getElementById('thumbnailContainer');
   const box = document.getElementById('thumbnailsBox');
@@ -384,9 +384,9 @@ function updateUploadUI() {
   });
 }
 
-// ================= 画布计算与控制点逻辑 =================
+// ================= Canvas calculation & control point logic =================
 
-// 根据状态重新计算画布大小并重置控制点
+// Recalculate canvas size based on state and reset control points
 function updateCanvasSizeAndReset() {
   const canvas = document.getElementById('imageCanvas');
   const maxWidth = 500;
@@ -395,7 +395,7 @@ function updateCanvasSizeAndReset() {
   let targetW = 400;
   let targetH = 300;
 
-  // 1. 确定画布原始分辨率基准
+  // 1. Determine canvas base resolution
   if (useBackground && backgroundImageObj) {
     targetW = backgroundImageObj.width;
     targetH = backgroundImageObj.height;
@@ -404,7 +404,7 @@ function updateCanvasSizeAndReset() {
     targetH = currentImageObj.height;
   }
 
-  // 2. 计算缩放后的显示尺寸（用于Web预览）
+  // 2. Calculate scaled display size（used forWebPreview）
   let width = targetW;
   let height = targetH;
   if (width > maxWidth) {
@@ -421,7 +421,7 @@ function updateCanvasSizeAndReset() {
   originalCanvasWidth = width;
   originalCanvasHeight = height;
 
-  // 3. 更新输入框的最大值限制
+  // 3. Update input max values
   ['tlX', 'trX', 'blX', 'brX'].forEach(id => document.getElementById(id).max = Math.floor(width));
   ['tlY', 'trY', 'blY', 'brY'].forEach(id => document.getElementById(id).max = Math.floor(height));
 
@@ -429,18 +429,18 @@ function updateCanvasSizeAndReset() {
   redrawCanvas();
 }
 
-// 重置控制点（修改为：以原比例撑满画布的某个方向，并精准贴合图片四角）
+// Reset control points (scale to fill canvas while maintaining aspect ratio)
 function resetControlPoints() {
   const canvas = document.getElementById('imageCanvas');
   let tlx, tly, trx, try_, blx, bly, brx, bry;
 
   if (currentImageObj) {
-    // 核心改动：计算缩放比例，使其"撑满"画布的宽度或高度（原比例最大化展示）
+    // Core change: calculate scale to fill canvas (maximize while keeping aspect ratio)
     const scale = Math.min(canvas.width / currentImageObj.width, canvas.height / currentImageObj.height);
     const drawW = currentImageObj.width * scale;
     const drawH = currentImageObj.height * scale;
     
-    // 居中放置，控制点精准绑定在图片边缘
+    // center，Bind control points precisely to image edges
     tlx = (canvas.width - drawW) / 2;
     tly = (canvas.height - drawH) / 2;
     trx = tlx + drawW;
@@ -450,7 +450,7 @@ function resetControlPoints() {
     brx = trx;
     bry = bly;
   } else {
-    // 无图片时的默认占位
+    // Default placeholder when no image
     tlx = 0; tly = 0;
     trx = canvas.width; try_ = 0;
     blx = 0; bly = canvas.height;
@@ -469,7 +469,7 @@ function resetControlPoints() {
   updateNumericInputsFromPoints();
 }
 
-// 初始化控制点拖拽
+// Initializecontrol point dragging
 function initControlPoints() {
   const points = ['topLeft', 'topRight', 'bottomLeft', 'bottomRight'];
   
@@ -496,11 +496,11 @@ function initControlPoints() {
     let x = e.clientX - containerRect.left - offsetX;
     let y = e.clientY - containerRect.top - offsetY;
     
-    // 强制限制在画布（即背景图）范围内，绝不越界
+    // Constrain to canvas bounds, never exceed
     x = Math.max(0, Math.min(x, canvas.width));
     y = Math.max(0, Math.min(y, canvas.height));
     
-    // 防止各点交叉
+    // Prevent points from crossing
     switch(dragPoint) {
       case 'topLeft':
         x = Math.min(x, parseFloat(document.getElementById('topRight').style.left) || canvas.width);
@@ -576,13 +576,13 @@ function updatePointFromNumericInput(inputId) {
   redrawCanvas();
 }
 
-// ================= 核心绘图算法 (支持Alpha混合) =================
+// ================= Core drawing algorithm (supportAlphablend) =================
 
 function redrawCanvas() {
   const canvas = document.getElementById('imageCanvas');
   const ctx = canvas.getContext('2d');
   
-  // 1. 清空画布并绘制背景
+  // 1. Clear and draw background
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   if (useBackground && backgroundImageObj) {
     ctx.drawImage(backgroundImageObj, 0, 0, canvas.width, canvas.height);
@@ -590,7 +590,7 @@ function redrawCanvas() {
 
   if (!currentImageObj) return;
 
-  // 获取控制点坐标
+  // Get control point coordinates
   const pts = [
     parseFloat(document.getElementById('topLeft').style.left), parseFloat(document.getElementById('topLeft').style.top),
     parseFloat(document.getElementById('topRight').style.left), parseFloat(document.getElementById('topRight').style.top),
@@ -598,16 +598,16 @@ function redrawCanvas() {
     parseFloat(document.getElementById('bottomRight').style.left), parseFloat(document.getElementById('bottomRight').style.top)
   ];
 
-  // 2. 绘制形变后的前景图叠加在背景上
+  // 2. Draw warped foreground over background
   drawPerspectiveImage(ctx, currentImageObj, 
     0, 0, canvas.width, 0, 0, canvas.height, canvas.width, canvas.height,
     pts[0], pts[1], pts[2], pts[3], pts[4], pts[5], pts[6], pts[7]
   );
 
-  // 3. 绘制辅助网格线
+  // 3. Draw guide grid lines
   ctx.strokeStyle = 'rgba(255, 107, 157, 0.8)';
   ctx.lineWidth = 1.5;
-  ctx.setLineDash([4, 4]); // 虚线更美观
+  ctx.setLineDash([4, 4]); // Dashed lines for better aesthetics
   ctx.beginPath();
   ctx.moveTo(pts[0], pts[1]); ctx.lineTo(pts[2], pts[3]);
   ctx.lineTo(pts[6], pts[7]); ctx.lineTo(pts[4], pts[5]);
@@ -623,7 +623,7 @@ function drawPerspectiveImage(ctx, img,
   const width = ctx.canvas.width;
   const height = ctx.canvas.height;
   
-  // 离屏渲染原图（保持其原样铺满一个虚拟画布，用于映射采样）
+  // Render source image to offscreen canvas (fill virtual canvas to sample from)
   const offscreen = document.createElement('canvas');
   offscreen.width = width;
   offscreen.height = height;
@@ -633,7 +633,7 @@ function drawPerspectiveImage(ctx, img,
   const imgData = offscreenCtx.getImageData(0, 0, width, height);
   const data = imgData.data;
 
-  // 获取目标画布当前的像素（包含了已经画好的背景！）
+  // Get existing canvas pixels (including background)
   const output = ctx.getImageData(0, 0, width, height);
   const outData = output.data;
 
@@ -650,12 +650,12 @@ function drawPerspectiveImage(ctx, img,
       const srcX = u * width;
       const srcY = v * height;
 
-      // 双线性插值，获取原图的 [r, g, b, a]
+      // Bilinear interpolation, get [r, g, b, a] from source
       const color = bilinearInterpolate(srcX, srcY, width, height, data);
       
       const idx = (y * width + x) * 4;
       
-      // Alpha透明度混合计算 (前景色 Over 背景色)
+      // Alpha blending (foreground Over background)
       const srcAlpha = color[3] / 255;
       const bgAlpha = outData[idx + 3] / 255;
       const outAlpha = srcAlpha + bgAlpha * (1 - srcAlpha);
@@ -669,11 +669,11 @@ function drawPerspectiveImage(ctx, img,
     }
   }
 
-  // 直接将处理好的带有背景的像素塞回画布
+  // Put processed pixels with background back to canvas
   ctx.putImageData(output, 0, 0);
 }
 
-// ---- 底层数学函数维持原样，仅为 bilinearInterpolate 添加了透明通道支持 ----
+// ---- Math functions unchanged, added alpha channel support to bilinearInterpolate ----
 function pointInQuad(px, py, x1, y1, x2, y2, x3, y3, x4, y4) {
   function cross(ax, ay, bx, by) { return ax * by - ay * bx; }
   function vec(a, b) { return [b[0]-a[0], b[1]-a[1]]; }
@@ -721,22 +721,22 @@ function bilinearInterpolate(x, y, width, height, data) {
     lerp(lerp(c1[0], c2[0], dx), lerp(c3[0], c4[0], dx), dy),
     lerp(lerp(c1[1], c2[1], dx), lerp(c3[1], c4[1], dx), dy),
     lerp(lerp(c1[2], c2[2], dx), lerp(c3[2], c4[2], dx), dy),
-    lerp(lerp(c1[3], c2[3], dx), lerp(c3[3], c4[3], dx), dy) // 加入Alpha
+    lerp(lerp(c1[3], c2[3], dx), lerp(c3[3], c4[3], dx), dy) // with Alpha
   ];
 }
 
 function lerp(a, b, t) { return a + (b - a) * t; }
 
 
-// ================= 批量下载功能 =================
+// ================= Batch download functionality =================
 
 function initButtons() {
   document.getElementById('downloadAllBtn').addEventListener('click', async function(e) {
     e.preventDefault();
-    if (uploadedImages.length === 0) return alert('请先上传需要拉伸的图片！');
-    if (useBackground && !backgroundImageObj) return alert('你开启了底图模式，请上传一张背景图！');
+    if (uploadedImages.length === 0) return alert('Please firstUpload images to warp！');
+    if (useBackground && !backgroundImageObj) return alert('Background mode is enabled. Please upload a background image!');
     
-    // 获取界面上归一化的控制点比例
+    // Get normalized control point ratios from UI
     const previewCanvas = document.getElementById('imageCanvas');
     const getScale = (id, prop) => parseFloat(document.getElementById(id).style[prop]) / (prop==='left'?previewCanvas.width:previewCanvas.height);
     
@@ -750,7 +750,7 @@ function initButtons() {
     const link = document.createElement('a');
     document.body.appendChild(link);
 
-    // 以原图分辨率（背景分辨率或第一张图的分辨率）为基准高清导出
+    // Export at original resolution (background or first image) in HD
     let outWidth, outHeight;
     if (useBackground && backgroundImageObj) {
       outWidth = backgroundImageObj.width;
@@ -771,12 +771,12 @@ function initButtons() {
       outCanvas.height = outHeight;
       const outCtx = outCanvas.getContext('2d');
       
-      // 1. 画背景
+      // 1. Draw background
       if (useBackground && backgroundImageObj) {
         outCtx.drawImage(backgroundImageObj, 0, 0, outWidth, outHeight);
       }
       
-      // 2. 将比例还原为实际高分像素并应用形变
+      // 2. Restore ratios to actual high-res pixels and apply warp
       drawPerspectiveImage(outCtx, img,
         0, 0, outWidth, 0, 0, outHeight, outWidth, outHeight,
         ptsRatio[0]*outWidth, ptsRatio[1]*outHeight,
@@ -786,14 +786,14 @@ function initButtons() {
       );
       
       link.href = outCanvas.toDataURL('image/png', 1.0);
-      link.download = `合成_${imgData.name.replace(/\.[^/.]+$/, "")}.png`;
+      link.download = `composite_${imgData.name.replace(/\.[^/.]+$/, "")}.png`;
       link.click();
       
-      await new Promise(resolve => setTimeout(resolve, 200)); // 延迟防止浏览器拦截
+      await new Promise(resolve => setTimeout(resolve, 200)); // Delay to prevent browser blocking
     }
     
     document.body.removeChild(link);
-    alert(`✅ 搞定！${uploadedImages.length} 张图片已全部处理并下载。`);
+    alert(`✅ Done! ${uploadedImages.length}  image(s) processed and downloaded.`);
   });
   
   document.getElementById('resetBtn').addEventListener('click', function(e) {
@@ -803,7 +803,7 @@ function initButtons() {
 }
 
 // ============================================
-// Google 登录
+// Google Login
 // ============================================
 const clientId = '1025674431845-t0bsq6ov8tp90vgcnjj0k7u3dqvp4qpe.apps.googleusercontent.com';
 
@@ -822,18 +822,18 @@ function renderGoogleButton() {
 }
 
 function handleCredentialResponse(response) {
-  // 解码 JWT token 获取用户信息
+  // decode JWT token Get user info
   const payload = JSON.parse(atob(response.credential.split('.')[1]));
   const name = payload.name;
   const email = payload.email;
   const picture = payload.picture;
 
-  // 隐藏登录按钮，显示用户信息
+  // Hide login button, show user info
   document.getElementById('g_id_onbutton').style.display = 'none';
   document.getElementById('userInfo').style.display = 'flex';
   document.getElementById('userName').textContent = '👋 ' + name;
 
-  console.log('Google 登录成功:', name, email);
+  console.log('Google login successful:', name, email);
   localStorage.setItem('googleUser', JSON.stringify({ name, email, picture }));
 }
 
@@ -845,7 +845,7 @@ function signOut() {
   localStorage.removeItem('googleUser');
 }
 
-// 等 GIS 库加载完成后再初始化
+// etc GIS Initialize after GIS library loads
 function initGIS() {
   if (typeof google === 'undefined' || !google.accounts || !google.accounts.id) {
     setTimeout(initGIS, 100);
@@ -855,11 +855,11 @@ function initGIS() {
     client_id: clientId,
     callback: handleCredentialResponse,
     auto_select: false,
-    use_fedcm_for_prompt: true  // 启用 FedCM，兼容阻止第三方 Cookie 的浏览器
+    use_fedcm_for_prompt: true  // enable FedCM，Compatible with browsers blocking third-party cookies
   });
   renderGoogleButton();
 
-  // 检查是否已登录（刷新后保持状态）
+  // Check if already logged in (persist state after refresh)
   const savedUser = localStorage.getItem('googleUser');
   if (savedUser) {
     const user = JSON.parse(savedUser);
@@ -869,7 +869,7 @@ function initGIS() {
   }
 }
 
-// 页面加载完成后初始化
+// Initialize after page loads
 if (document.readyState === 'complete') {
   initGIS();
 } else {
